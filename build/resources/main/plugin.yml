@@ -1,0 +1,5 @@
+main: org.knur.com.Main
+name: knurskidev
+version: 06a9ed47-57e6-4ebb-b26e-9a3a38f848d7
+api-version: 1.19
+softdepend: [Multiverse-Core, VoidGen]

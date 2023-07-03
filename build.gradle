@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+group 'org.knur.com'
+version 'release'
+
+import org.yaml.snakeyaml.Yaml;
+
+def pluginFile = file('src/main/resources/plugin.yml');
+def pluginData = new Yaml().load(pluginFile.text)
+def newVersion = UUID.randomUUID().toString()
+pluginData['version'] = newVersion
+pluginFile.write(new Yaml().dump(pluginData))
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+    implementation 'org.yaml:snakeyaml:1.29' // Choose the version you need
+    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    implementation 'org.postgresql:postgresql:42.2.27.jre6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+shadowJar {
+    archiveBaseName.set('knurplugin')
+    archiveVersion.set('release')
+    archiveClassifier.set('')
+}
+
+test {
+    useJUnitPlatform()
+}
